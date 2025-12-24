@@ -1,6 +1,8 @@
 #pragma once
 #include <functional>
+#include <mutex>
 #include <string>
+#include <thread>
 #include <vector>
 
 
@@ -9,6 +11,7 @@ struct EngColor {
 };
 
 constexpr EngColor ENGWHITE = {1.0f, 1.0f, 1.0f};
+constexpr EngColor ENGBLACK = {0.0f, 0.0f, 0.0f};
 
 class App {
 
@@ -16,18 +19,28 @@ public:
   App();
 
   bool build(const int sW, const int sH, const std::string &name);
-  void run();
+  void stop();
+  void run_frame();
+
+  bool is_running();
 
   void EngBGColor(const EngColor c);
-  void BGColor(const EngColor c);
-
-
+  void EngGetUserInput();
+  char EngCurrentUserInputExtract();
 private:
+
+  void BGColor(const EngColor c);
+  void getUserInput();
+
   int screenWidth = 0;
   int screenHeight = 0;
   std::string screenName;
 
+
+  char current_user_input = ' ';
+
   std::vector<std::function<void()>> comms;
+  std::mutex comms_mutex;
 
 };
 
