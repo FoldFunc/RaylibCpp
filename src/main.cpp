@@ -5,7 +5,9 @@
 int main() {
   App app;
   app.build(100, 100, "Window name");
-  app.BGColor(ENGWHITE);
-  app.run();
+  while (app.is_running()) {
+    app.EngBGColor(ENGWHITE);
+    app.run_frame();
+  }
   return 0;
 }

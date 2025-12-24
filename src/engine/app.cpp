@@ -4,6 +4,12 @@
 // I am a genius.
 
 #include "raylib.h"
+#include <chrono>
+#include <functional>
+#include <iostream>
+#include <mutex>
+#include <thread>
+#include <vector>
 #include "app.hpp"
 
 App::App() = default;
@@ -19,7 +25,13 @@ bool App::build(const int sW, const int sH, const std::string &name) {
   SetTargetFPS(60);
   return true;
 }
+
+bool App::is_running() {
+  return !WindowShouldClose();
+}
+
 void App::EngBGColor(const EngColor c) {
+  std::lock_guard<std::mutex> lock(comms_mutex);
   comms.push_back([this, c] () { BGColor(c); });
 }
 void App::BGColor(const EngColor c) {
@@ -32,11 +44,13 @@ void App::BGColor(const EngColor c) {
   ClearBackground(nc);
   EndDrawing();
 }
-void App::run() {
-  while (!WindowShouldClose()) {
-    for (auto &cmd : comms) {
-      cmd();
-    }
+void App::run_frame() {
+  std::vector<std::function<void()>> currnetComms;
+  {
+    std::lock_guard<std::mutex> lock(comms_mutex);
+    currnetComms.swap(comms);
   }
-  CloseWindow();
+  for (auto &cmd : currnetComms) {
+    cmd();
+  }
 }
