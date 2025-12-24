@@ -25,15 +25,19 @@ public:
   bool is_running();
 
   void EngBGColor(const EngColor c);
-
-
+  void EngGetUserInput();
+  char EngCurrentUserInputExtract();
 private:
 
   void BGColor(const EngColor c);
+  void getUserInput();
 
   int screenWidth = 0;
   int screenHeight = 0;
   std::string screenName;
+
+
+  char current_user_input = ' ';
 
   std::vector<std::function<void()>> comms;
   std::mutex comms_mutex;
