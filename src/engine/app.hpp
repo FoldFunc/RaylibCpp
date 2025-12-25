@@ -2,9 +2,15 @@
 #include <functional>
 #include <mutex>
 #include <string>
-#include <thread>
 #include <vector>
 
+enum class ENGKeys {
+  None,
+  Enter,
+  Escape,
+  Q,
+  WTF,
+};
 
 struct EngColor {
   float r, g, b;
@@ -26,7 +32,7 @@ public:
 
   void EngBGColor(const EngColor c);
   void EngGetUserInput();
-  char EngCurrentUserInputExtract();
+  ENGKeys EngCurrentUserInputExtract();
 private:
 
   void BGColor(const EngColor c);
@@ -37,7 +43,7 @@ private:
   std::string screenName;
 
 
-  char current_user_input = ' ';
+  ENGKeys current_user_input = ENGKeys::None;
 
   std::vector<std::function<void()>> comms;
   std::mutex comms_mutex;

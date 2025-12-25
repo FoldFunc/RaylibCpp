@@ -23,11 +23,12 @@ bool App::build(const int sW, const int sH, const std::string &name) {
   SetTargetFPS(60);
   return true;
 }
-
 bool App::is_running() {
   return !WindowShouldClose();
 }
-
+void App::stop() {
+  CloseWindow();
+}
 void App::EngBGColor(const EngColor c) {
   std::lock_guard<std::mutex> lock(comms_mutex);
   comms.push_back([this, c] () { BGColor(c); });
@@ -40,7 +41,7 @@ void App::EngGetUserInput() {
   comms.push_back([this] () { getUserInput(); });
 }
 
-char App::EngCurrentUserInputExtract() {
+ENGKeys App::EngCurrentUserInputExtract() {
   return current_user_input;
 }
 
@@ -56,9 +57,16 @@ void App::BGColor(const EngColor c) {
 }
 
 void App::getUserInput() {
-  int key = GetCharPressed();
-  char c = static_cast<char>(key);
-  current_user_input = c;
+  current_user_input = ENGKeys::None;
+  if (IsKeyPressed(KEY_ENTER)) {
+    current_user_input = ENGKeys::Enter;
+  } else if (IsKeyPressed(KEY_ESCAPE)) {
+    current_user_input = ENGKeys::Escape;
+  } else if (IsKeyPressed(KEY_Q)) {
+    current_user_input = ENGKeys::Q;
+  } else {
+    current_user_input = ENGKeys::WTF;
+  }
 }
 
 void App::run_frame() {
