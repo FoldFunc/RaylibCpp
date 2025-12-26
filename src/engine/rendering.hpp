@@ -10,7 +10,7 @@ struct ENGRect {
   int w;
   int h;
   EngColor c;
-  bool isPlayer;
+  bool isPlayer = false;
 };
 
 struct ENGPixel {

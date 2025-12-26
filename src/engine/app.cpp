@@ -79,10 +79,16 @@ void App::getUserInput() {
   if (IsKeyDown(KEY_Q)) keys_down.insert(ENGKeys::Q);
   if (IsKeyDown(KEY_ESCAPE)) keys_down.insert(ENGKeys::Escape);
   if (IsKeyDown(KEY_ENTER)) keys_down.insert(ENGKeys::Enter);
+  if (IsKeyDown(KEY_W)) keys_down.insert(ENGKeys::W);
+  if (IsKeyDown(KEY_S)) keys_down.insert(ENGKeys::S);
+  if (IsKeyDown(KEY_A)) keys_down.insert(ENGKeys::A);
 }
 std::string App::to_string(ENGKeys key) {
   switch (key) {
     case ENGKeys::D: return "D";
+    case ENGKeys::W: return "W";
+    case ENGKeys::S: return "S";
+    case ENGKeys::A: return "A";
     case ENGKeys::Q: return "q";
     case ENGKeys::Enter: return "ENTER";
     case ENGKeys::Escape: return "ESCAPE";
