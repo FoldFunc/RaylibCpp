@@ -1,7 +1,9 @@
 #pragma once
 #include <functional>
 #include <mutex>
+#include <optional>
 #include <string>
+#include <unordered_set>
 #include <vector>
 #include "rendering.hpp"
 #include "engine.hpp"
@@ -15,14 +17,21 @@ public:
   void stop();
   void run_frame();
   void submitAction(ENGRenderCommand cmd);
+  std::string to_string(ENGKeys key);
 
   bool is_running();
 
   void EngGetUserInput();
-  ENGKeys EngCurrentUserInputExtract();
+  std::vector<ENGKeys> EngCurrentUserInputExtract();
+
+  std::optional<ENGRect*> EngFindPlayer();
+  std::optional<ENGRect*>find_player();
+
+  bool KeysPressedContain(std::vector<ENGKeys> vk, ENGKeys k);
 
   Drawer drawer;
-
+  std::unordered_set<ENGKeys> keys_down;
+  std::vector<ENGObject> objects;
 private:
 
   void getUserInput();
