@@ -4,11 +4,12 @@
 using ENGRenderCommand = std::function<void()>;
 
 enum class ENGKeys {
-  None,
   Enter,
   Escape,
   Q,
+  D,
   WTF,
+  None,
 };
 
 struct EngColor {
