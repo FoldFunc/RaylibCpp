@@ -25,6 +25,8 @@ public:
   void submitAction(ENGRenderCommand cmd);
   std::string to_string(ENGKeys key);
 
+  void print_all_objects();
+
   bool is_running();
   int amount_rendered();
   
