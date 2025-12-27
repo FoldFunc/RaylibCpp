@@ -6,14 +6,36 @@
 #include <algorithm>
 #include <chrono>
 #include <thread>
+#include <type_traits>
 #include <variant>
 #include <vector>
+int amount_rendered(std::vector<ENGObject> &objects) {
+  int counter = 0;
+  for ( auto &obj : objects) {
+    std::visit([&counter] (auto &item) {
+      if (item.draw) counter++;
+    }, obj);
+  }
+  return counter;
+}
 int main() {
   App app;
-  app.build(800, 600, "Window name");
-  ENGRect rect = ENGRect(200, 200, 20, 20, ENGBLACK); // This 'true' indicates this is a player.
-  app.objects.push_back(rect);
+  int w = 800;
+  int h = 600;
+  app.build(w, h, "Window name");
+  int frame_w = 50;
+  int frame_h = 50;
+  for (int i = 0;i<w;i+=frame_w) {
+    for (int j = 0;j<h;j+=frame_h) {
+      ENGFrame r = ENGFrame(i, j, frame_w, frame_h, ENGBLACK);
+      app.objects.push_back(r);
+    }
+  }
+  int rendering_amount = amount_rendered(app.objects);
+  std::string str = "Current rendering objects: " + std::to_string(rendering_amount);
+  ENGText t = ENGText(0, 0, 20, str, ENGRED);
   static std::optional<ENGCursorPosition> gc;
+  app.objects.push_back(t);
   while (app.is_running()) {
     app.drawer.EngBGColor(ENGWHITE);
 
@@ -37,6 +59,22 @@ int main() {
       gc = c;
     }else {
       gc.reset();
+    }
+    int rendering_amount = amount_rendered(app.objects);
+    for ( auto &obj : app.objects) {
+      std::visit([w, h, rendering_amount] (auto &item) {
+          using T = std::decay_t<decltype(item)>;
+          if constexpr (std::is_same_v<T, ENGFrame>) {
+            if (((item.x > w && item.y > w) || (item.x > h && item.y > h))  && item.draw == true) {
+              item.draw = false;
+            } else if (((item.x < w && item.y < w) || (item.x < h && item.y < h))  && item.draw == false) {
+              item.draw = true;
+            }
+          } else if constexpr (std::is_same_v<T, ENGText>) {
+            std::string str = "Current rendering objects: " + std::to_string(rendering_amount);
+            item.inside = str;
+          }
+      }, obj);
     }
     app.drawer.EngDrawAll(app.objects);
 
