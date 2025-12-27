@@ -32,6 +32,15 @@ void App::stop() {
   CloseWindow();
 }
 
+int App::amount_rendered() {
+  int counter = 0;
+  for ( auto &obj : objects) {
+    std::visit([&counter] (auto &item) {
+      if (item.draw) counter++;
+    }, obj);
+  }
+  return counter;
+}
 void App::submitAction(ENGRenderCommand cmd) {
   std::lock_guard<std::mutex> lock(comms_mutex);
   comms.push_back(std::move(cmd));

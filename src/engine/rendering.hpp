@@ -13,6 +13,8 @@ struct ENGText {
   std::string inside;
   EngColor c = ENGWHITE;
   bool draw = true;
+  bool sticky = false;
+  int id;
 };
 
 struct ENGCircle {
@@ -22,6 +24,8 @@ struct ENGCircle {
   EngColor c = ENGWHITE;
   bool isPlayer = false;
   bool draw = true;
+  bool sticky = false;
+  int id;
 };
 
 struct ENGFrame {
@@ -31,6 +35,8 @@ struct ENGFrame {
   int h;
   EngColor c = ENGWHITE;
   bool draw = true;
+  bool sticky = false;
+  int id;
 };
 
 struct ENGRect {
@@ -41,6 +47,8 @@ struct ENGRect {
   EngColor c = ENGWHITE;
   bool isPlayer = false;
   bool draw = true;
+  bool sticky = false;
+  int id;
 };
 
 struct ENGLine {
@@ -50,6 +58,8 @@ struct ENGLine {
   int ey;
   EngColor c;
   bool draw = true;
+  bool sticky = false;
+  int id;
 };
 
 struct ENGPixel {
@@ -57,6 +67,8 @@ struct ENGPixel {
   int y;
   EngColor c;
   bool draw = true;
+  bool sticky = false;
+  int id;
 };
 using ENGObject = std::variant<ENGPixel, ENGRect, ENGLine, ENGCircle, ENGText, ENGFrame>;
 

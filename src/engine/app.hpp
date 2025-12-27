@@ -26,6 +26,7 @@ public:
   std::string to_string(ENGKeys key);
 
   bool is_running();
+  int amount_rendered();
   
   ENGCursorPosition EngGetCursorPosition();
 
