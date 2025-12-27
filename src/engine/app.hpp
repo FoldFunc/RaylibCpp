@@ -8,6 +8,12 @@
 #include "rendering.hpp"
 #include "engine.hpp"
 
+struct ENGCursorPosition {
+  int x;
+  int y;
+};
+
+
 class App {
 public:
   App()
@@ -20,6 +26,8 @@ public:
   std::string to_string(ENGKeys key);
 
   bool is_running();
+  
+  ENGCursorPosition EngGetCursorPosition();
 
   void EngGetUserInput();
   std::vector<ENGKeys> EngCurrentUserInputExtract();

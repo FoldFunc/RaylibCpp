@@ -4,6 +4,8 @@
 using ENGRenderCommand = std::function<void()>;
 
 enum class ENGKeys {
+  LMB,
+  RMB,
   Enter,
   Escape,
   Q,

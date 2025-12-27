@@ -3,28 +3,41 @@
 #include "engine/app.hpp"
 #include "engine/engine.hpp"
 #include "engine/rendering.hpp"
+#include <algorithm>
 #include <chrono>
 #include <thread>
+#include <variant>
 #include <vector>
 int main() {
   App app;
   app.build(800, 600, "Window name");
   ENGRect rect = ENGRect(200, 200, 20, 20, ENGBLACK); // This 'true' indicates this is a player.
-  ENGLine line = ENGLine(200, 200, 300, 300, ENGBLACK);
-  ENGCircle circle = ENGCircle(400, 400, 20, ENGBLACK);
-  std::string hello = "Hello world";
-  ENGText text = ENGText(100, 100, 20, hello, ENGBLACK);
   app.objects.push_back(rect);
-  app.objects.push_back(line);
-  app.objects.push_back(circle);
-  app.objects.push_back(text);
+  static std::optional<ENGCursorPosition> gc;
   while (app.is_running()) {
     app.drawer.EngBGColor(ENGWHITE);
 
     app.EngGetUserInput(); // This mf sets a variable that we have to get from another method.
     std::vector<ENGKeys> current_input = app.EngCurrentUserInputExtract();
 
-
+    if (std::ranges::find(current_input, ENGKeys::LMB) != current_input.end()) {
+      ENGCursorPosition c = app.EngGetCursorPosition();
+      if (!gc) {
+        gc = c;
+        continue;
+      }
+      int dx = c.x - gc->x;
+      int dy = c.y - gc->y;
+      for (auto &obj : app.objects) {
+        std::visit([dx, dy] (auto &item) {
+            item.x -= dx;
+            item.y -= dy;
+        }, obj);
+      }
+      gc = c;
+    }else {
+      gc.reset();
+    }
     app.drawer.EngDrawAll(app.objects);
 
     app.run_frame();
