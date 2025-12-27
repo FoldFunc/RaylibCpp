@@ -7,8 +7,10 @@
 #include "raylib.h"
 #include "rendering.hpp"
 #include <functional>
+#include <iostream>
 #include <mutex>
 #include <optional>
+#include <type_traits>
 #include <variant>
 #include <vector>
 #include "app.hpp"
@@ -30,6 +32,21 @@ bool App::is_running() {
 }
 void App::stop() {
   CloseWindow();
+}
+
+void App::print_all_objects() {
+  for (auto &obj : objects) {
+    std::visit([&] (auto &item){
+      using T = std::decay_t<decltype(item)>;
+      if constexpr (std::is_same_v<T, ENGFrame>) {
+        std::cout << "Frame: " << "\n";
+        std::cout << "    x   : " << item.x << "\n";
+        std::cout << "    y   : " << item.y << "\n";
+        std::cout << "    draw: " << item.draw << "\n";
+        std::cout << "    id  : " << item.id << "\n";
+      }
+    }, obj); 
+  }
 }
 
 int App::amount_rendered() {
