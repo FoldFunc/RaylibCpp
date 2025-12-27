@@ -32,6 +32,15 @@ void App::stop() {
   CloseWindow();
 }
 
+int App::amount_rendered() {
+  int counter = 0;
+  for ( auto &obj : objects) {
+    std::visit([&counter] (auto &item) {
+      if (item.draw) counter++;
+    }, obj);
+  }
+  return counter;
+}
 void App::submitAction(ENGRenderCommand cmd) {
   std::lock_guard<std::mutex> lock(comms_mutex);
   comms.push_back(std::move(cmd));
@@ -51,6 +60,15 @@ std::optional<ENGRect*> App::EngFindPlayer() {
   auto player = find_player();
   return player;
 }
+
+ENGCursorPosition App::EngGetCursorPosition() {
+  Vector2 mouse_pos = GetMousePosition();
+  ENGCursorPosition cursor_pos;
+  cursor_pos.x = mouse_pos.x;
+  cursor_pos.y = mouse_pos.y;
+  return cursor_pos;
+}
+
 // This will set a variable that user will be able to get.
 // That will happend every single frame.
 // This design is so stupid that I'm not gonna even try to explain.
@@ -82,6 +100,8 @@ void App::getUserInput() {
   if (IsKeyDown(KEY_W)) keys_down.insert(ENGKeys::W);
   if (IsKeyDown(KEY_S)) keys_down.insert(ENGKeys::S);
   if (IsKeyDown(KEY_A)) keys_down.insert(ENGKeys::A);
+  if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) keys_down.insert(ENGKeys::LMB);
+  if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) keys_down.insert(ENGKeys::RMB);
 }
 std::string App::to_string(ENGKeys key) {
   switch (key) {
@@ -93,6 +113,8 @@ std::string App::to_string(ENGKeys key) {
     case ENGKeys::Enter: return "ENTER";
     case ENGKeys::Escape: return "ESCAPE";
     case ENGKeys::WTF: return "WTF";
+    case ENGKeys::LMB: return "Left mouse button";
+    case ENGKeys::RMB: return "Right mouse button";
     default: return "Unknown";
   }
 }

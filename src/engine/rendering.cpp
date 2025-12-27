@@ -28,6 +28,13 @@ void Drawer::EngDrawRect(ENGRect r) {
       draw_rect(r);
   });
 }
+
+void Drawer::EngDrawFrame(ENGFrame f) {
+  submit([this, f] () {
+      draw_frame(f);
+  });
+}
+
 void Drawer::EngBGColor(const EngColor c) {
   submit(([this, c] () {BGColor(c);}));
 }
@@ -66,6 +73,16 @@ void Drawer::draw_rect(ENGRect r) {
   c.a = 255;
   DrawRectangle(r.x, r.y, r.w, r.h, c);
 }
+
+void Drawer::draw_frame(ENGFrame f) {
+  Color c;
+  c.r = static_cast<unsigned char>(f.c.r*255);
+  c.g = static_cast<unsigned char>(f.c.g*255);
+  c.b = static_cast<unsigned char>(f.c.b*255);
+  c.a = 255;
+  DrawRectangleLines(f.x, f.y, f.w, f.h, c);
+}
+
 void Drawer::draw_pixel(ENGPixel p) {
   Color c;
   c.r = static_cast<unsigned char>(p.c.r*255);
@@ -94,15 +111,29 @@ void Drawer::draw_all(std::vector<ENGObject> objects) {
     std::visit([&](auto &&o) {
         using T = std::decay_t<decltype(o)>;
         if constexpr (std::is_same_v<T, ENGPixel>) {
-          draw_pixel(o); 
+          if (o.draw) {
+            draw_pixel(o); 
+          }
         } else if constexpr (std::is_same_v<T, ENGRect>) {
-          draw_rect(o); 
+          if (o.draw) {
+            draw_rect(o); 
+          }
         } else if constexpr (std::is_same_v<T, ENGLine>) {
-          draw_line(o);
+          if (o.draw) {
+            draw_line(o); 
+          }
         } else if constexpr (std::is_same_v<T, ENGCircle>) {
-          draw_circle(o); 
+          if (o.draw) {
+            draw_circle(o); 
+          }
         } else if constexpr (std::is_same_v<T, ENGText>) {
-          draw_text(o); 
+          if (o.draw) {
+            draw_text(o); 
+          }
+        } else if constexpr (std::is_same_v<T, ENGFrame>) {
+          if (o.draw) {
+            draw_frame(o); 
+          }
         }
     }, obj);
   }

@@ -4,6 +4,8 @@
 using ENGRenderCommand = std::function<void()>;
 
 enum class ENGKeys {
+  LMB,
+  RMB,
   Enter,
   Escape,
   Q,
@@ -21,4 +23,4 @@ struct EngColor {
 
 constexpr EngColor ENGWHITE = {1.0f, 1.0f, 1.0f};
 constexpr EngColor ENGBLACK = {0.0f, 0.0f, 0.0f};
-
+constexpr EngColor ENGRED   = {1.0f, 0.0f, 0.0f};

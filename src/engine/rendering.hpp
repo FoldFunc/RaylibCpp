@@ -12,6 +12,9 @@ struct ENGText {
   int s;
   std::string inside;
   EngColor c = ENGWHITE;
+  bool draw = true;
+  bool sticky = false;
+  int id;
 };
 
 struct ENGCircle {
@@ -20,6 +23,20 @@ struct ENGCircle {
   int r;
   EngColor c = ENGWHITE;
   bool isPlayer = false;
+  bool draw = true;
+  bool sticky = false;
+  int id;
+};
+
+struct ENGFrame {
+  int x;
+  int y;
+  int w;
+  int h;
+  EngColor c = ENGWHITE;
+  bool draw = true;
+  bool sticky = false;
+  int id;
 };
 
 struct ENGRect {
@@ -29,6 +46,9 @@ struct ENGRect {
   int h;
   EngColor c = ENGWHITE;
   bool isPlayer = false;
+  bool draw = true;
+  bool sticky = false;
+  int id;
 };
 
 struct ENGLine {
@@ -37,14 +57,20 @@ struct ENGLine {
   int ex;
   int ey;
   EngColor c;
+  bool draw = true;
+  bool sticky = false;
+  int id;
 };
 
 struct ENGPixel {
   int x;
   int y;
   EngColor c;
+  bool draw = true;
+  bool sticky = false;
+  int id;
 };
-using ENGObject = std::variant<ENGPixel, ENGRect, ENGLine, ENGCircle, ENGText>;
+using ENGObject = std::variant<ENGPixel, ENGRect, ENGLine, ENGCircle, ENGText, ENGFrame>;
 
 class Drawer {
 public:
@@ -63,7 +89,10 @@ public:
   void draw_circle(ENGCircle c);
 
   void EngDrawRect(ENGRect r);
-  void draw_rect(ENGRect p);
+  void draw_rect(ENGRect r);
+
+  void EngDrawFrame(ENGFrame r);
+  void draw_frame(ENGFrame p);
 
   void EngDrawLine(ENGLine l);
   void draw_line(ENGLine l);
