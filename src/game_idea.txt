@@ -1,1 +1,2 @@
-Game name: "IDK"
+Game name: ""
+Game theme: "A factory or a city builder" (something like that)

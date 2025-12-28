@@ -25,6 +25,8 @@ public:
   void submitAction(ENGRenderCommand cmd);
   std::string to_string(ENGKeys key);
 
+  int generate_random(int start, int end);
+
   void print_all_objects();
 
   bool is_running();

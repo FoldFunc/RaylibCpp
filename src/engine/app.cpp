@@ -6,10 +6,13 @@
 #include "engine.hpp"
 #include "raylib.h"
 #include "rendering.hpp"
+#include <cstdlib>
+#include <ctime>
 #include <functional>
 #include <iostream>
 #include <mutex>
 #include <optional>
+#include <random>
 #include <type_traits>
 #include <variant>
 #include <vector>
@@ -32,6 +35,14 @@ bool App::is_running() {
 }
 void App::stop() {
   CloseWindow();
+}
+
+int App::generate_random(int start, int end) {
+  static std::random_device rd;
+  static std::mt19937 gen(rd());
+  std::uniform_int_distribution<> dist(start, end);
+
+  return dist(gen);
 }
 
 void App::print_all_objects() {
